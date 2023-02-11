@@ -2,8 +2,8 @@
 function [commands] = compute_steps()
     % Constants ---------------------------------------------------------- 
     MAX_U = 3.2; % The max value of u in the parametric definition of path
-    DELTA_T = 0.1; % The precision of dt to use when discretely approximating integrals
-    DU_DT_SCAN = 0.05; % The accuracy used to parameter sweep du/dt
+    DELTA_T = 0.05; % The precision of dt to use when discretely approximating integrals
+    DU_DT_SCAN = 0.01; % The accuracy used to parameter sweep du/dt
     DU_DT_SCAN_MAX = 2.0; % Max value to permit in sweep of du/dt
     MAX_NEETO_SPEED = 0.3; % Neeto cannot drive faster than +- 0.3 m/s.
     
