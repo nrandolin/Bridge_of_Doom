@@ -31,10 +31,15 @@ end
 % Plot Theoretical Speed 
 figure(); 
 hold on; 
-theoretical_speed = (commands(:, 1) + commands(:, 2)) / 2;
-plot(commands(:, 3), theoretical_speed);
-plot(commands(:, 3), commands(:, 1));
-plot(commands(:, 3), commands(:, 2));
+theoretical_vl = plot(commands(:, 3), commands(:, 1));
+theoretical_vr = plot(commands(:, 3), commands(:, 2));
+legend([theoretical_vl,theoretical_vr], ["Theoretical (V_l)", "Theoretical (V_r)"]);
+xlim([0, 13]) % 12.83 seconds to run BOD path
+xlabel("Time (s)")
+ylabel("Neato Wheel Speed (m/s)")
+
+% Plot actual speed
+
 
 %Plot Theoretical Wheel Velocities
 
