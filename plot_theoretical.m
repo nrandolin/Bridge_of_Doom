@@ -33,12 +33,27 @@ figure();
 hold on; 
 theoretical_vl = plot(commands(:, 3), commands(:, 1));
 theoretical_vr = plot(commands(:, 3), commands(:, 2));
-legend([theoretical_vl,theoretical_vr], ["Theoretical (V_l)", "Theoretical (V_r)"]);
 xlim([0, 13]) % 12.83 seconds to run BOD path
 xlabel("Time (s)")
 ylabel("Neato Wheel Speed (m/s)")
 
 % Plot actual speed
+
+% encoder readings are slow, remove duplicate rows
+encoder_data =  table2array(readtable('real_encoder_data'));
+encoder_data_clean = []; 
+for i=2:size(encoder_data)
+    if(encoder_data(i,2) ~= encoder_data(i-1,2))
+        encoder_data_clean = [encoder_data_clean; encoder_data(i,:)]
+    end
+end
+% differentiate 
+measured_vl_data = diff(encoder_data_clean(:,2)) ./ diff(encoder_data_clean(:,1));
+measured_vr_data = diff(encoder_data_clean(:,3)) ./ diff(encoder_data_clean(:,1));
+measured_vl_plot = plot(encoder_data_clean(1:end-1,1), measured_vl_data, '--');
+measured_vr_plot = plot(encoder_data_clean(1:end-1,1), measured_vr_data, '--');
+legend([theoretical_vl,theoretical_vr, measured_vl_plot, measured_vr_plot], ["Theoretical (V_l)", "Theoretical (V_r)", "Actual (V_l)", "Actual (V_r)"]);
+
 
 
 %Plot Theoretical Wheel Velocities
