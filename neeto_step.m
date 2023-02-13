@@ -1,5 +1,5 @@
 
-function [next_u, V_l_command, V_r_command] = neeto_step(current_u, delta_t, V_l_symbolic, V_r_symbolic, sub_eval_symb, DU_DT_SCAN, DU_DT_SCAN_MAX, MAX_NEETO_SPEED)
+function [next_u, V_l_command, V_r_command, V_vec, dT_hat_dt] = neeto_step(current_u, delta_t, V_symbolic, dT_hat_dt_symbolic, V_l_symbolic, V_r_symbolic, sub_eval_symb, DU_DT_SCAN, DU_DT_SCAN_MAX, MAX_NEETO_SPEED)
     optimal_du_dt = 0;
     V_l_command = 0;
     V_r_command = 0;
@@ -11,6 +11,8 @@ function [next_u, V_l_command, V_r_command] = neeto_step(current_u, delta_t, V_l
             optimal_du_dt = du_guess;
             V_l_command = V_l_discrete;
             V_r_command = V_r_discrete;
+            V_vec = sub_eval_symb(V_symbolic, current_u, du_guess);
+            dT_hat_dt = sub_eval_symb(dT_hat_dt_symbolic, current_u, du_guess);
         else
             break
         end
