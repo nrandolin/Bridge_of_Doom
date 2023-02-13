@@ -1,6 +1,8 @@
-clc, clear, close all;
+close all;
 
-commands = compute_steps()
+if exist('commands','var') == 0
+    commands = compute_steps()
+end
 
 % Run the simulator 
 [sensors,vels]=neatoSim();
