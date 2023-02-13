@@ -29,14 +29,16 @@ for i=1:1:length(points)
     quiver(location_x, location_y, vector_norm(1), vector_norm(2), 'r');
 end
 
+% Plot Theoretical Speed 
+figure(); 
+hold on; 
+theoretical_speed = (commands(:, 1) + commands(:, 2)) / 2;
+plot(commands(:, 3), theoretical_speed);
+plot(commands(:, 3), commands(:, 1));
+plot(commands(:, 3), commands(:, 2));
+
+%Plot Theoretical Wheel Velocities
+
+%Plot Planned Robot Path
 
 
-
-
-
-
-%quiver(commands(idx, ), 0, 1, 1)
-
-
-%xlim([-0.5 0.5])
-%ylim([-0.4 0.8])
