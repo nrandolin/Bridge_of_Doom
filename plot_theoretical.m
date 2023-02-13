@@ -4,7 +4,6 @@ if exist('commands','var') == 0
     commands = compute_steps()
 end
 
-
 syms u
 ri = (0.3960*cos(2.65*(u+1.4)));
 rj = (-0.99*(sin(u+1.4)));
