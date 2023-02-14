@@ -1,4 +1,4 @@
-% quiver 
+close all; 
 
 if exist('commands','var') == 0
     commands = compute_steps()
@@ -54,7 +54,32 @@ measured_vl_plot = plot(encoder_data_clean(1:end-1,1), measured_vl_data, '--');
 measured_vr_plot = plot(encoder_data_clean(1:end-1,1), measured_vr_data, '--');
 legend([theoretical_vl,theoretical_vr, measured_vl_plot, measured_vr_plot], ["Theoretical (V_l)", "Theoretical (V_r)", "Actual (V_l)", "Actual (V_r)"]);
 
+% 
+measured_v = (measured_vl_data + measured_vr_data) / 2; 
+measured_w = (measured_vr_data - measured_vl_data) / 0.245; 
 
+measured_theta = [0];
+for i=1:size(measured_w)
+    delta_t = encoder_data_clean(i+1,1) - encoder_data_clean(i,1);
+    measured_theta = [measured_theta; measured_theta(end) + measured_w(i)*delta_t];
+end
+
+measured_r = [double(subs(ri,u,0)) double(subs(rj,u,0))]; 
+for i=1:size(measured_v)
+    delta_t = encoder_data_clean(i+1,1) - encoder_data_clean(i,1);
+    next_x = measured_r(end, 1) + measured_v(i)*cos(measured_theta(i))*delta_t;
+    next_y = measured_r(end, 2) + measured_v(i)*sin(measured_theta(i))*delta_t;
+    measured_r = [measured_r; next_x next_y];
+end
+
+figure();
+hold on;
+axis equal; 
+plot_parametric_theoretical = fplot(ri, rj, [0, 3.2]);
+plot_parametric_measured = plot(measured_r(:,1), measured_r(:,2), '--');
+legend([plot_parametric_theoretical,plot_parametric_measured], ["Theoretical parametric plot", "Measured parametric plot"]);
+xlabel("x location in meters");
+ylabel("y location in meters");
 
 %Plot Theoretical Wheel Velocities
 
