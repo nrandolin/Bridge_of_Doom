@@ -1,5 +1,5 @@
 
-function [next_u, V_l_command, V_r_command, V_vec, dT_hat_dt] = neeto_step(current_u, delta_t, V_symbolic, dT_hat_dt_symbolic, V_l_symbolic, V_r_symbolic, sub_eval_symb, MAX_NEETO_SPEED)
+function [next_u, V_l_command, V_r_command, V_vec, dT_hat_dt, omega_u_value] = neeto_step(current_u, delta_t, V_symbolic, dT_hat_dt_symbolic, V_l_symbolic, V_r_symbolic, sub_eval_symb, MAX_NEETO_SPEED, omega_u_symbolic)
     optimal_du_dt = 0;
     V_l_command = 1000000;
     V_r_command = 1000000;
@@ -21,6 +21,8 @@ function [next_u, V_l_command, V_r_command, V_vec, dT_hat_dt] = neeto_step(curre
    
     V_vec = sub_eval_symb(V_symbolic, current_u, optimal_du_dt);
     dT_hat_dt = sub_eval_symb(dT_hat_dt_symbolic, current_u, optimal_du_dt);
-    next_u = current_u + delta_t * optimal_du_dt
+    omega_u_value = sun_eval_symbolic(omega_u_symbolic, current_u, optimal_du_dt);
+    next_u = current_u + delta_t * optimal_du_dt;
+    
 end
 

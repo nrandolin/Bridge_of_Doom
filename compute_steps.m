@@ -24,7 +24,7 @@ function [commands] = compute_steps()
     dT_hat_dt_symbolic = diff(T_hat_symbolic,t); 
     omega_u = cross(T_hat_symbolic, dT_hat_dt_symbolic);
     omega_u = omega_u(t); % these two lines get the third element of symbolic matrix 
-    omega_u = omega_u(3);
+    omega_u = omega_u(3)
     
     % Symbolic derivation of wheel commands with respect to u(t) and du/dt
     V_l_symbolic = V_symbolic - omega_u * (d/2);
@@ -34,13 +34,14 @@ function [commands] = compute_steps()
     sub_du_dt = @(symbolic_expr, du_dt_sub) (subs(symbolic_expr, diff(u(t), t), du_dt_sub));
     sub_u = @(symbolic_expr, u_sub) (subs(symbolic_expr, u(t), u_sub));
     sub_eval_symb = @(symbolic_expr, u_sub, du_dt_sub) (double(sub_u(sub_du_dt(symbolic_expr,du_dt_sub),u_sub)));
+    
 
     % Pre-compute the optimal du/dt values with brute force approximation
     commands = [0 0 0 0 0 0 0 0 0 0];
     current_u = 0;
     while(current_u < MAX_U)
-        [next_u, V_l_command, V_r_command, V_vec, dT_hat_dt] = neeto_step(current_u, DELTA_T, dr_dt, dT_hat_dt_symbolic, V_l_symbolic, V_r_symbolic, sub_eval_symb, MAX_NEETO_SPEED);
-        commands = [commands; V_l_command V_r_command (DELTA_T * size(commands, 1)) current_u V_vec(1) V_vec(2) V_vec(3) dT_hat_dt(1) dT_hat_dt(2) dT_hat_dt(3)];
+        [next_u, V_l_command, V_r_command, V_vec, dT_hat_dt, omega_u_value] = neeto_step(current_u, DELTA_T, dr_dt, dT_hat_dt_symbolic, V_l_symbolic, V_r_symbolic, sub_eval_symb, MAX_NEETO_SPEED, omega_u;
+        commands = [commands; V_l_command V_r_command (DELTA_T * size(commands, 1)) current_u V_vec(1) V_vec(2) V_vec(3) dT_hat_dt(1) dT_hat_dt(2) dT_hat_dt(3), omega_u_value];
         current_u = next_u
     end
 end
