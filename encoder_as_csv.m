@@ -1,0 +1,1 @@
+csvwrite("real_encoder_data", encoder_data )
