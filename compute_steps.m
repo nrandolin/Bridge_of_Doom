@@ -37,11 +37,11 @@ function [commands] = compute_steps()
     
 
     % Pre-compute the optimal du/dt values with brute force approximation
-    commands = [0 0 0 0 0 0 0 0 0 0];
+    commands = [0 0 0 0 0 0 0 0 0 0 0];
     current_u = 0;
     while(current_u < MAX_U)
-        [next_u, V_l_command, V_r_command, V_vec, dT_hat_dt, omega_u_value] = neeto_step(current_u, DELTA_T, dr_dt, dT_hat_dt_symbolic, V_l_symbolic, V_r_symbolic, sub_eval_symb, MAX_NEETO_SPEED, omega_u;
-        commands = [commands; V_l_command V_r_command (DELTA_T * size(commands, 1)) current_u V_vec(1) V_vec(2) V_vec(3) dT_hat_dt(1) dT_hat_dt(2) dT_hat_dt(3), omega_u_value];
+        [next_u, V_l_command, V_r_command, V_vec, dT_hat_dt, omega_u_value] = neeto_step(current_u, DELTA_T, dr_dt, dT_hat_dt_symbolic, V_l_symbolic, V_r_symbolic, sub_eval_symb, MAX_NEETO_SPEED, omega_u);
+        commands = [commands; V_l_command V_r_command (DELTA_T * size(commands, 1)) current_u V_vec(1) V_vec(2) V_vec(3) dT_hat_dt(1) dT_hat_dt(2) dT_hat_dt(3) omega_u_value];
         current_u = next_u
     end
 end

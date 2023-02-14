@@ -21,7 +21,7 @@ function [next_u, V_l_command, V_r_command, V_vec, dT_hat_dt, omega_u_value] = n
    
     V_vec = sub_eval_symb(V_symbolic, current_u, optimal_du_dt);
     dT_hat_dt = sub_eval_symb(dT_hat_dt_symbolic, current_u, optimal_du_dt);
-    omega_u_value = sun_eval_symbolic(omega_u_symbolic, current_u, optimal_du_dt);
+    omega_u_value = sub_eval_symb(omega_u_symbolic, current_u, optimal_du_dt);
     next_u = current_u + delta_t * optimal_du_dt;
     
 end
