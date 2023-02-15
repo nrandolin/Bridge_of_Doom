@@ -148,7 +148,7 @@ figure();
 tiledlayout(2,1);
 nexttile;
 hold on; 
-plot_measured_omega = plot(encoder_data_clean(1:end-1,1), measured_w);
+plot_measured_omega = plot(encoder_data_clean(1:end-1,1), measured_w, '--');
 plot_theoretical_omega = plot(commands(:,3), commands(:,11));
 legend([plot_theoretical_omega, plot_measured_omega], ["Theoretical omega", "Measured omega"]);
 
@@ -160,7 +160,7 @@ ylabel('Angular Speed (rad/sec)');
 nexttile;
 hold on;
 theoretical_v_plot = plot(commands(:, 3), (commands(:,1) + commands(:,2)) / 2);
-measured_v_plot = plot(encoder_data_clean(1:end-1,1), (measured_vl_data + measured_vr_data) / 2);
+measured_v_plot = plot(encoder_data_clean(1:end-1,1), (measured_vl_data + measured_vr_data) / 2, '--');
 legend([theoretical_v_plot, measured_v_plot], ["Theoretical linear speed", "Measured linear speed"]);
 title('Linear Speed With Respect to Time');
 xlabel('Time (seconds)');
