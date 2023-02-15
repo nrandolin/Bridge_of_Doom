@@ -11,9 +11,11 @@ rj = (-0.99*(sin(u+1.4)));
 figure(); 
 hold on; 
 axis equal; 
-fplot(ri, rj, [0, 3.2]);
+fplot(ri, rj, [0, 3.2], 'black');
 
-points = [5, 20, 34, 50, 73];
+points = [50, 300, 600, 900, 1200];
+quiver_tan = 0; 
+quiver_norm = 0;
 for i=1:1:length(points)
     idx = points(i);
     location_x = double(subs(ri, u, commands(idx, 4)));
@@ -24,9 +26,16 @@ for i=1:1:length(points)
     vector_norm = [ commands(idx, 8),  commands(idx, 9)];
     vector_norm = (vector_norm ./ norm(vector_norm)) * 0.5;
 
-    quiver(location_x, location_y, vector_speed(1), vector_speed(2), 'b');
-    quiver(location_x, location_y, vector_norm(1), vector_norm(2), 'r');
+    quiver_tan = quiver(location_x, location_y, vector_speed(1), vector_speed(2), 'b');
+    quiver_norm = quiver(location_x, location_y, vector_norm(1), vector_norm(2), 'r');
 end
+legend([quiver_tan,quiver_norm], ["0.5 unit tangent vector", "0.5 unit normal vector"]);
+xlabel("X Location (meters)");
+ylabel("Y Location (meters)");
+title("0.5 Unit Tangent and Normal Vectors on Parametric Plot");
+
+exportgraphics(gcf,'plots/parametric-tangent-normal.png','Resolution',1000)
+
 
 % Plot Theoretical Speed 
 figure(); 
@@ -53,6 +62,9 @@ measured_vr_data = diff(encoder_data_clean(:,3)) ./ diff(encoder_data_clean(:,1)
 measured_vl_plot = plot(encoder_data_clean(1:end-1,1), measured_vl_data, '--');
 measured_vr_plot = plot(encoder_data_clean(1:end-1,1), measured_vr_data, '--');
 legend([theoretical_vl,theoretical_vr, measured_vl_plot, measured_vr_plot], ["Theoretical (V_l)", "Theoretical (V_r)", "Actual (V_l)", "Actual (V_r)"]);
+title("Neato Wheel Speeds Theoretical and Measured");
+exportgraphics(gcf,'plots/neato-wheel-speeds.png','Resolution',1000)
+
 
 % 
 measured_v = (measured_vl_data + measured_vr_data) / 2; 
@@ -79,8 +91,11 @@ axis equal;
 plot_parametric_theoretical = fplot(ri, rj, [0, 3.2]);
 plot_parametric_measured = plot(measured_r(:,1), measured_r(:,2), '--');
 legend([plot_parametric_theoretical,plot_parametric_measured], ["Theoretical parametric plot", "Measured parametric plot"]);
-xlabel("x location in meters");
-ylabel("y location in meters");
+xlabel("X Location (meters)");
+ylabel("Y Location (meters)");
+title("Measured and Actual Parametric Path");
+exportgraphics(gcf,'plots/parametric-plot.png','Resolution',1000)
+
 
 % Plot omega and speed
 figure();
@@ -89,7 +104,7 @@ nexttile;
 hold on; 
 plot_measured_omega = plot(encoder_data_clean(1:end-1,1), measured_w);
 plot_theoretical_omega = plot(commands(:,3), commands(:,11));
-legend([plot_measured_omega, plot_theoretical_omega], ["Theoretical omega", "Measured omega"]);
+legend([plot_theoretical_omega, plot_measured_omega], ["Theoretical omega", "Measured omega"]);
 
 title('Angular Speed With Respect to Time');
 xlabel('Time (seconds)');
@@ -104,9 +119,9 @@ legend([theoretical_v_plot, measured_v_plot], ["Theoretical linear speed", "Meas
 title('Linear Speed With Respect to Time');
 xlabel('Time (seconds)');
 ylabel('Speed (m/s)');
+exportgraphics(gcf,'plots/omega-and-velocity.png','Resolution',1000)
 
 
-%Plot Theoretical Wheel Velocities
-
+close all; 
 
 
