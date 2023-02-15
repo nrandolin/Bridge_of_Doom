@@ -1,4 +1,5 @@
 close all; 
+clearvars -except commands;
 
 if exist('commands','var') == 0
     commands = compute_steps()
@@ -84,17 +85,62 @@ for i=1:size(measured_v)
     measured_r = [measured_r; next_x next_y];
 end
 
-%Plot Planned Robot Path
+%Plot Planned Robot Path WITH TANGENTS -------------------------------
 figure();
 hold on;
 axis equal; 
 plot_parametric_theoretical = fplot(ri, rj, [0, 3.2]);
 plot_parametric_measured = plot(measured_r(:,1), measured_r(:,2), '--');
-legend([plot_parametric_theoretical,plot_parametric_measured], ["Theoretical parametric plot", "Measured parametric plot"]);
 xlabel("X Location (meters)");
 ylabel("Y Location (meters)");
 title("Measured and Actual Parametric Path");
+
+% PLOT TANGENTS TO MEASURED
+idx_measured = 2:20:58
+meas_tangent = 1;
+meas_norm = 1;
+for i=1:size(idx_measured,2)
+    idx = idx_measured(i)
+    tangent_vec = measured_r(idx,:) - measured_r(idx-1,:);
+    tangent_vec = [tangent_vec(1) tangent_vec(2) 0];
+    tangent_vec = tangent_vec ./ norm(tangent_vec);
+
+    omega_vec = [0 0 measured_w(i) ./ norm(measured_w(i))];
+
+    normal_vec = -1*cross(tangent_vec, omega_vec);
+
+    if(idx > 58/2)
+        normal_vec = normal_vec * -1;
+    end
+    
+    meas_tangent = quiver(measured_r(idx,1), measured_r(idx,2), tangent_vec(1) * 0.5, tangent_vec(2) * 0.5, 'b--');
+    meas_norm = quiver(measured_r(idx,1), measured_r(idx,2), normal_vec(1) * 0.5, normal_vec(2) * 0.5, 'r--');
+end
+
+points = [300, 700, 1200];
+quiver_tan = 0; 
+quiver_norm = 0;
+for i=1:1:length(points)
+    idx = points(i);
+    location_x = double(subs(ri, u, commands(idx, 4)));
+    location_y = double(subs(rj, u, commands(idx, 4)));
+    vector_speed = [ commands(idx, 5), commands(idx, 6)];
+    vector_speed = (vector_speed ./ norm(vector_speed)) * 0.5;
+
+    vector_norm = [ commands(idx, 8),  commands(idx, 9)];
+    vector_norm = (vector_norm ./ norm(vector_norm)) * 0.5;
+
+    quiver_tan = quiver(location_x, location_y, vector_speed(1), vector_speed(2), 'b');
+    quiver_norm = quiver(location_x, location_y, vector_norm(1), vector_norm(2), 'r');
+end
+
+legend([plot_parametric_theoretical,plot_parametric_measured,quiver_tan,quiver_norm], ["Theoretical parametric plot", "Measured parametric plot","0.5 Unit Tangent Vector", "0.5 Unit Normal Vector"]);
+
+
+
 exportgraphics(gcf,'plots/parametric-plot.png','Resolution',1000)
+
+
 
 
 % Plot omega and speed
@@ -112,7 +158,7 @@ ylabel('Angular Speed (rad/sec)');
 
 % Bottom plot
 nexttile;
-hold on; 
+hold on;
 theoretical_v_plot = plot(commands(:, 3), (commands(:,1) + commands(:,2)) / 2);
 measured_v_plot = plot(encoder_data_clean(1:end-1,1), (measured_vl_data + measured_vr_data) / 2);
 legend([theoretical_v_plot, measured_v_plot], ["Theoretical linear speed", "Measured linear speed"]);
