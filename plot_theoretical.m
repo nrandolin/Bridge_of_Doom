@@ -93,7 +93,7 @@ plot_parametric_theoretical = fplot(ri, rj, [0, 3.2]);
 plot_parametric_measured = plot(measured_r(:,1), measured_r(:,2), '--');
 xlabel("X Location (meters)");
 ylabel("Y Location (meters)");
-title("Measured and Actual Parametric Path");
+title("Measured and Theoretical Parametric Path");
 
 % PLOT TANGENTS TO MEASURED
 idx_measured = 2:20:58
