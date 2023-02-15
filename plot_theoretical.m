@@ -16,8 +16,8 @@ fplot(ri, rj, [0, 3.2]);
 points = [5, 20, 34, 50, 73];
 for i=1:1:length(points)
     idx = points(i);
-    location_x = double(subs(ri, u, commands(idx, 4)))
-    location_y = double(subs(rj, u, commands(idx, 4)))
+    location_x = double(subs(ri, u, commands(idx, 4)));
+    location_y = double(subs(rj, u, commands(idx, 4)));
     vector_speed = [ commands(idx, 5), commands(idx, 6)];
     vector_speed = (vector_speed ./ norm(vector_speed)) * 0.5;
 
@@ -44,7 +44,7 @@ encoder_data =  table2array(readtable('real_encoder_data'));
 encoder_data_clean = []; 
 for i=2:size(encoder_data)
     if(encoder_data(i,2) ~= encoder_data(i-1,2))
-        encoder_data_clean = [encoder_data_clean; encoder_data(i,:)]
+        encoder_data_clean = [encoder_data_clean; encoder_data(i,:)];
     end
 end
 % differentiate 
@@ -88,6 +88,9 @@ tiledlayout(2,1);
 nexttile;
 hold on; 
 plot_measured_omega = plot(encoder_data_clean(1:end-1,1), measured_w);
+plot_theoretical_omega = plot(commands(:,3), commands(:,11));
+legend([plot_measured_omega, plot_theoretical_omega], ["Theoretical omega", "Measured omega"]);
+
 title('Angular Speed With Respect to Time');
 xlabel('Time (seconds)');
 ylabel('Angular Speed (rad/sec)');
@@ -96,7 +99,8 @@ ylabel('Angular Speed (rad/sec)');
 nexttile;
 hold on; 
 theoretical_v_plot = plot(commands(:, 3), (commands(:,1) + commands(:,2)) / 2);
-legend([theoretical_v_plot], ["Theoretical linear speed"]);
+measured_v_plot = plot(encoder_data_clean(1:end-1,1), (measured_vl_data + measured_vr_data) / 2);
+legend([theoretical_v_plot, measured_v_plot], ["Theoretical linear speed", "Measured linear speed"]);
 title('Linear Speed With Respect to Time');
 xlabel('Time (seconds)');
 ylabel('Speed (m/s)');
