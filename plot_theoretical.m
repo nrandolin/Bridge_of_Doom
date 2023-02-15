@@ -72,6 +72,7 @@ for i=1:size(measured_v)
     measured_r = [measured_r; next_x next_y];
 end
 
+%Plot Planned Robot Path
 figure();
 hold on;
 axis equal; 
@@ -81,8 +82,27 @@ legend([plot_parametric_theoretical,plot_parametric_measured], ["Theoretical par
 xlabel("x location in meters");
 ylabel("y location in meters");
 
+% Plot omega and speed
+figure();
+tiledlayout(2,1);
+nexttile;
+hold on; 
+plot_measured_omega = plot(encoder_data_clean(1:end-1,1), measured_w);
+title('Angular Speed With Respect to Time');
+xlabel('Time (seconds)');
+ylabel('Angular Speed (rad/sec)');
+
+% Bottom plot
+nexttile;
+hold on; 
+theoretical_v_plot = plot(commands(:, 3), (commands(:,1) + commands(:,2)) / 2);
+legend([theoretical_v_plot], ["Theoretical linear speed"]);
+title('Linear Speed With Respect to Time');
+xlabel('Time (seconds)');
+ylabel('Speed (m/s)');
+
+
 %Plot Theoretical Wheel Velocities
 
-%Plot Planned Robot Path
 
 
